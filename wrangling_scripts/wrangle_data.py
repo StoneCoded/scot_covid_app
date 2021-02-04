@@ -15,6 +15,8 @@ nbh_id = '8906de12-f413-4b3f-95a0-11ed15e61773'
 daily_id = '287fc645-4352-4477-9c8c-55bc054b7e76'
 by_hb_id = '427f9a25-db22-4014-a3bc-893b68243055'
 hosp_id = '5acbccb1-e9d6-4ab2-a7ac-f3e4d378e7ec'
+deaths_id = '733aad2d-5420-4966-bc34-386a3475623f'
+
 def get_api(resource_id, sql_query):
     base_url = 'https://www.opendata.nhs.scot/api/3/action/datastore_search_sql?sql='
     # handle certificate verification and SSL warnings
@@ -136,6 +138,29 @@ def snap_shot(n_days):
     hb_m_df = hb_m_df.drop('DateStr', axis = 1)
     return hb_m_df
 
+def deaths():
+    '''
+    returns most recent daily covid related deaths
+    from the Scottish Goverment
+    '''
+    sql_deaths = f'''
+    SELECT "WeekEnding", "Deaths"
+    FROM "{deaths_id}"
+    ORDER BY "WeekEnding" ASC
+    '''
+    death_df = get_api(deaths_id, sql_deaths)
+    death_df.columns = ['Deaths', 'Date']
+    death_df['Date'] = death_df['Date'].apply(lambda x: pd.to_datetime(str(x),\
+        format='%Y%m%d'))
+    death_df['AvgDeaths'] = death_df['Deaths'].rolling(14,\
+        win_type='triang', min_periods=1).mean()
+
+
+    return daily_df
+
+death_df.head()
+daily_df.head()
+
 #Creates Figures
 def return_figures():
     """Creates four plotly visualizations
@@ -149,11 +174,15 @@ def return_figures():
     """
     #New Covic cases over time for Scotland
     df_one = daily()
+    # Sets date as index and creates new column 'casetype'
+    # defining average_cases or daily_cases
     df_one = df_one.set_index('Date').stack().reset_index()
-
     df_one.columns = ['Date', 'casetype', 'Cases']
     df_one = df_one.iloc[-100:,:]
     graph_one = []
+
+    # Creates a list of unique values, in this case there are 2
+    # average_cases and daily_cases
     ct_list = df_one.casetype.unique().tolist()
 
 
@@ -279,6 +308,32 @@ def return_figures():
         'xanchor': 'center',
         'yanchor': 'top'})
 
+    df_six = daily()
+    df_six = df_six.set_index('Date').stack().reset_index()
+
+    df_six.columns = ['Date', 'casetype', 'Deaths']
+    df_six = df_six.iloc[-100:,:]
+    graph_six = []
+    ct_list = df_six.casetype.unique().tolist()
+
+
+    for ct in ct_list:
+      x_val = df_six[df_six.casetype == ct]['Date'].tolist()
+      y_val = df_six[df_six.casetype == ct]['Deaths'].tolist()
+
+      graph_six.append(go.Scatter(
+              x = x_val,
+              y = y_val,
+              mode = 'lines',
+              name = ct
+              ),
+          )
+    layout_six = dict(title = 'Weekly COVID-19 Deaths in Scotland',
+                xaxis = dict(title = 'Date'),
+                yaxis = dict(title = 'Deaths'),
+                font=dict( color="black"
+                        )
+                )
 
 
     # append all charts to the figures list
@@ -288,5 +343,6 @@ def return_figures():
     figures.append(dict(data=graph_three, layout=layout_three))
     figures.append(dict(data=graph_four, layout=layout_four))
     figures.append(dict(data=graph_five, layout=layout_five))
+    figures.append(dict(data=graph_six, layout=layout_six))
 
     return figures

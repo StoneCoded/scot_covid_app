@@ -24,7 +24,7 @@ Other than he standard Anaconda distribution of Python 3 you will also need:
 - [urllib3](https://pypi.org/project/urllib3/) - to handle  data retrieval
 - [certifi](https://pypi.org/project/certifi/) - to handle certificate verification
 
-For information on deployment to Heroku, click [here]('https://devcenter.heroku.com/categories/deployment').
+For information on deployment to Heroku, click [here]('https://devcenter.heroku.com/categories/deployment')
 
 ##2. Project Overview
 
@@ -36,7 +36,7 @@ without having to rely on news sites or social media posts.
 
 ## 3. Results and Observations
 
-The fully opperation web app can be found [here]('http://scotcovidapp.herokuapp.com').
+The fully opperation web app can be found [here]('http://scotcovidapp.herokuapp.com')
 
 ## 5.Licensing, Authors, and Acknowledgements
 All data is owned by the Scottish Government.

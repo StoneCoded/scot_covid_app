@@ -24,7 +24,7 @@ Other than he standard Anaconda distribution of Python 3 you will also need:
 - [urllib3](https://pypi.org/project/urllib3/) - to handle  data retrieval
 - [certifi](https://pypi.org/project/certifi/) - to handle certificate verification
 
-For information on deployment to Heroku, click [here]('https://devcenter.heroku.com/categories/deployment')
+For information on deployment to Heroku [Heroku]('https://devcenter.heroku.com/categories/deployment')
 
 ##2. Project Overview
 

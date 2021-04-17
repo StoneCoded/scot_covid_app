@@ -11,10 +11,15 @@ import json
 import pandas as pd
 
 base_url = 'https://www.opendata.nhs.scot/api/3/action/datastore_search_sql?sql='
+#Neighbourhoods
 nbh_id = '8906de12-f413-4b3f-95a0-11ed15e61773'
+#Daily Cases total
 daily_id = '287fc645-4352-4477-9c8c-55bc054b7e76'
+# Cases by local authority
 by_hb_id = '427f9a25-db22-4014-a3bc-893b68243055'
+# Hospital Onset
 hosp_id = '5acbccb1-e9d6-4ab2-a7ac-f3e4d378e7ec'
+
 def get_api(resource_id, sql_query):
     base_url = 'https://www.opendata.nhs.scot/api/3/action/datastore_search_sql?sql='
     # handle certificate verification and SSL warnings
@@ -112,7 +117,6 @@ def top_la_daily():
     hb_df['Date'] = hb_df['DateStr'].apply(lambda x: pd.to_datetime(str(x),\
      format='%Y%m%d'))
     return hb_df.drop('DateStr', axis = 1)
-
 
 def snap_shot(n_days):
     '''

@@ -4,7 +4,8 @@
 1. Files and Implementation
 2. Project Overview
 3. Results and Observations
-4. Licensing, Authors, and Acknowledgements
+4. Moving Forward
+5. Licensing, Authors, and Acknowledgements
 
 ## 1. Files and Implementation
 
@@ -37,6 +38,12 @@ without having to rely on news sites or social media posts.
 ## 3. Results and Observations
 
 The fully opperation web app can be found [here](http://scotcovidapp.herokuapp.com)
+
+## 4. Moving Forward
+
+When I come to revisit this I know I will be able to refactor, optimise and question
+my former self intensly. I would like to add a heatmap of Scotland instead of the ranked bargraph
+at some point. For now though I am content with its current format.
 
 ## 5.Licensing, Authors, and Acknowledgements
 All data is owned by the Scottish Government.

@@ -20,7 +20,7 @@ by_hb_id = '427f9a25-db22-4014-a3bc-893b68243055'
 # Hospital Onset
 hosp_id = '5acbccb1-e9d6-4ab2-a7ac-f3e4d378e7ec'
 
-def get_api(resource_id, sql_query):
+def get_api(sql_query):
     base_url = 'https://www.opendata.nhs.scot/api/3/action/datastore_search_sql?sql='
     # handle certificate verification and SSL warnings
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
@@ -34,7 +34,7 @@ def get_api(resource_id, sql_query):
     return df
 
 def latest_date(resource_id):
-    date_df = get_api(resource_id,
+    date_df = get_api(
     f'''
     SELECT "Date"
     FROM "{resource_id}"
@@ -44,8 +44,8 @@ def latest_date(resource_id):
     latest_date = date_df.iloc[0,0]
     return latest_date
 
-def month_before(resource_id,n_days):
-    date_df = get_api(resource_id,
+def month_before(resource_id, n_days):
+    date_df = get_api(
     f'''
     SELECT DISTINCT "Date"
     FROM "{resource_id}"
@@ -66,7 +66,7 @@ def daily():
     FROM "{daily_id}"
     ORDER BY "Date" ASC
     '''
-    daily_df = get_api(daily_id, sql_daily)
+    daily_df = get_api(sql_daily)
     daily_df.columns = ['DateStr', 'DailyCases']
     daily_df['Date'] = daily_df['DateStr'].apply(lambda x: pd.to_datetime(str(x),\
         format='%Y%m%d'))
@@ -87,7 +87,7 @@ def top_nbh_daily():
     FROM "{nbh_id}"
     WHERE "Date" = {day}
     '''
-    nbh_df = get_api(nbh_id, sql_nbh)
+    nbh_df = get_api(sql_nbh)
     nbh_df['Positive7Day'] = pd.to_numeric(nbh_df['Positive7Day'])
     nbh_df = nbh_df.sort_values(by=['Positive7Day'], ascending = False)\
     .reset_index(drop = True)
@@ -109,7 +109,7 @@ def top_la_daily():
     FROM "{by_hb_id}"
     WHERE "Date" = {day}
     '''
-    hb_df = get_api(by_hb_id, sql_hb)
+    hb_df = get_api(sql_hb)
     hb_df['DailyPositive'] = pd.to_numeric(hb_df['DailyPositive'])
     hb_df = hb_df.sort_values(by=['DailyPositive'], ascending = False)\
     .reset_index(drop = True)
@@ -132,7 +132,7 @@ def snap_shot(n_days):
     WHERE "Date" BETWEEN {_n_days} AND {day}
     ORDER BY "Date" DESC
     '''
-    hb_m_df = get_api(by_hb_id, sql_hb_m)
+    hb_m_df = get_api(sql_hb_m)
     hb_m_df['PositivePercentage'] = pd.to_numeric(hb_m_df['PositivePercentage'])
     hb_m_df.columns = ['DateStr', 'PositivePercentage', 'Local Authority']
     hb_m_df['Date'] = hb_m_df['DateStr'].apply(lambda x: pd.to_datetime(str(x),\
